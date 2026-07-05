@@ -41,6 +41,9 @@ jobs:
           echo "mc_version=${MC_VERSION}" >> "$GITHUB_OUTPUT"
           echo "mod_name=${MOD_NAME}" >> "$GITHUB_OUTPUT"
 
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
       - name: Build both loaders
         run: ./gradlew build -Pversion=${{ steps.vars.outputs.mod_version }} --no-daemon --stacktrace
 
