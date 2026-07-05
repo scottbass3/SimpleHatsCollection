@@ -147,7 +147,9 @@ public class CollectionScreen extends Screen {
         HatCollection collection = ClientCollectionData.get();
         rebuildDisplayed(collection);
 
-        graphics.fill(panelLeft, titleY - 6, panelRight, progressY + 12, 0xC0101010);
+        // Opaque panel so the blurred world background does not bleed through the interface.
+        graphics.fill(panelLeft - 1, titleY - 7, panelRight + 1, progressY + 13, 0xFF000000);
+        graphics.fill(panelLeft, titleY - 6, panelRight, progressY + 12, 0xFF16161C);
         graphics.drawCenteredString(this.font, this.title, this.width / 2, titleY, 0xFFFFFF);
 
         int unlocked = 0;
@@ -172,7 +174,7 @@ public class CollectionScreen extends Screen {
 
                 int x = gridLeft + c * CELL;
                 int y = gridTop + vr * CELL;
-                graphics.fill(x, y, x + CELL, y + CELL, owned ? 0x33FFFFFF : 0x11FFFFFF);
+                graphics.fill(x, y, x + CELL, y + CELL, owned ? 0xFF3A3A44 : 0xFF232329);
 
                 ItemStack icon = firstStoredOrBase(hat, collection);
                 graphics.renderItem(icon, x + 1, y + 1);
@@ -238,7 +240,7 @@ public class CollectionScreen extends Screen {
         int height = menuRows.size() * rowH + 4;
         int left = Math.min(this.menuLeft, this.width - menuWidth - 2);
         int top = Math.min(this.menuTop, this.height - height - 2);
-        graphics.fill(left, top, left + menuWidth, top + height, 0xF0000000);
+        graphics.fill(left, top, left + menuWidth, top + height, 0xFF0A0A0A);
         graphics.fill(left, top, left + menuWidth, top + 1, 0xFFAAAAAA);
 
         for (int i = 0; i < menuRows.size(); i++) {
