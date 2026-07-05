@@ -12,11 +12,14 @@
     "screen.simplehatscollection.sort.count": "Quantity",
     "screen.simplehatscollection.missing_shown": "Missing: shown",
     "screen.simplehatscollection.missing_hidden": "Missing: hidden",
+    "screen.simplehatscollection.search": "Search...",
 
     "tooltip.simplehatscollection.missing": "Not collected yet",
     "tooltip.simplehatscollection.stored": "In collection: x%1$s",
-    "tooltip.simplehatscollection.click_withdraw": "Click to withdraw",
-    "tooltip.simplehatscollection.click_variants": "Click to choose a variant to withdraw",
+    "tooltip.simplehatscollection.click_withdraw": "Left-click to withdraw",
+    "tooltip.simplehatscollection.click_variants": "Left-click to choose a variant to withdraw",
+    "tooltip.simplehatscollection.favorite": "Right-click to favorite",
+    "tooltip.simplehatscollection.unfavorite": "Right-click to remove favorite",
 
     "message.simplehatscollection.deposited": "Stored %1$s in your collection"
 }

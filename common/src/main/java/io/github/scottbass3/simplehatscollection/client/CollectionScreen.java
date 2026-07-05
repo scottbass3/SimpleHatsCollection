@@ -9,6 +9,7 @@ import io.github.scottbass3.simplehatscollection.net.WithdrawHatPayload;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * The collection screen: a scrollable grid with one cell per base hat. Unlocked hats
@@ -60,6 +62,7 @@ public class CollectionScreen extends Screen {
 
     private Button sortButton;
     private Button missingButton;
+    private EditBox search;
 
     // Open variant pick-list ("context menu"), by hat name; null when closed.
     private String openMenuName;
@@ -77,12 +80,13 @@ public class CollectionScreen extends Screen {
         this.allHats.clear();
         this.allHats.addAll(HatSupport.allHats());
 
-        int contentHeight = 16 + 24 + GRID_H + 16;
+        int contentHeight = 16 + 24 + 20 + GRID_H + 16;
         int startY = Math.max(10, (this.height - contentHeight) / 2);
         this.titleY = startY;
-        int buttonsY = startY + 14;
+        int buttonsY = startY + 16;
+        int searchY = startY + 40;
         this.gridLeft = (this.width - GRID_W) / 2;
-        this.gridTop = startY + 40;
+        this.gridTop = startY + 60;
         this.progressY = gridTop + GRID_H + 6;
 
         int btnW = 130;
@@ -104,6 +108,13 @@ public class CollectionScreen extends Screen {
         addRenderableWidget(this.sortButton);
         addRenderableWidget(this.missingButton);
 
+        this.search = new EditBox(this.font, rowX, searchY, rowW, 16,
+                Component.translatable("screen.simplehatscollection.search"));
+        this.search.setHint(Component.translatable("screen.simplehatscollection.search"));
+        this.search.setMaxLength(64);
+        this.search.setResponder(s -> this.scrollRow = 0);
+        addRenderableWidget(this.search);
+
         // Refresh the collection from the server whenever the screen opens.
         Platform.SEND_TO_SERVER.accept(RequestSyncPayload.INSTANCE);
     }
@@ -120,9 +131,12 @@ public class CollectionScreen extends Screen {
     }
 
     private void rebuildDisplayed(HatCollection collection) {
+        String query = (this.search != null ? this.search.getValue() : "").trim().toLowerCase(Locale.ROOT);
         displayed.clear();
         for (HatItem hat : allHats) {
-            if (hideMissing && collection.totalForName(hat.getHatEntry().getHatName()) <= 0) continue;
+            String name = hat.getHatEntry().getHatName();
+            if (hideMissing && collection.totalForName(name) <= 0) continue;
+            if (!query.isEmpty() && !matches(hat, name, query)) continue;
             displayed.add(hat);
         }
         switch (sortMode) {
@@ -135,9 +149,18 @@ public class CollectionScreen extends Screen {
                     .thenComparing(h -> h.getHatEntry().getHatName()));
             case REGISTRY -> { /* keep registration order */ }
         }
+        // Favourites float to the top, keeping the chosen order within each group (stable sort).
+        displayed.sort(Comparator.comparingInt(
+                (HatItem h) -> FavoritesStore.isFavorite(h.getHatEntry().getHatName()) ? 0 : 1));
+
         int totalRows = Math.max(1, (displayed.size() + COLS - 1) / COLS);
         this.maxScrollRow = Math.max(0, totalRows - VISIBLE_ROWS);
         this.scrollRow = Math.max(0, Math.min(this.scrollRow, this.maxScrollRow));
+    }
+
+    private static boolean matches(HatItem hat, String name, String query) {
+        if (name.toLowerCase(Locale.ROOT).contains(query)) return true;
+        return new ItemStack(hat).getHoverName().getString().toLowerCase(Locale.ROOT).contains(query);
     }
 
     @Override
@@ -197,6 +220,11 @@ public class CollectionScreen extends Screen {
                 } else {
                     graphics.renderItemDecorations(this.font, icon, x + 1, y + 1, String.valueOf(total));
                 }
+                if (FavoritesStore.isFavorite(name)) {
+                    // Gold corner marker for favourites.
+                    graphics.fill(x + 1, y + 1, x + 5, y + 5, 0xFF3A2E00);
+                    graphics.fill(x + 1, y + 1, x + 4, y + 4, 0xFFFFD24A);
+                }
 
                 if (mouseX >= x && mouseX < x + CELL && mouseY >= y && mouseY < y + CELL) {
                     hovered = hat;
@@ -237,6 +265,10 @@ public class CollectionScreen extends Screen {
                         .withStyle(ChatFormatting.YELLOW));
             }
         }
+        lines.add((FavoritesStore.isFavorite(name)
+                ? Component.translatable("tooltip.simplehatscollection.unfavorite")
+                : Component.translatable("tooltip.simplehatscollection.favorite"))
+                .withStyle(ChatFormatting.GOLD));
         return lines;
     }
 
@@ -295,17 +327,23 @@ public class CollectionScreen extends Screen {
         }
 
         HatItem clicked = cellAt(mouseX, mouseY);
-        if (clicked != null && button == 0) {
-            List<HatCollection.Counted> variants =
-                    ClientCollectionData.get().variantsForName(clicked.getHatEntry().getHatName());
-            if (variants.isEmpty()) {
-                return true; // missing hat, nothing to withdraw
-            } else if (variants.size() == 1) {
-                Platform.SEND_TO_SERVER.accept(new WithdrawHatPayload(variants.get(0).hat()));
+        if (clicked != null) {
+            String name = clicked.getHatEntry().getHatName();
+            if (button == 1) { // right-click toggles favourite
+                FavoritesStore.toggle(name);
                 return true;
-            } else {
-                this.openMenuName = clicked.getHatEntry().getHatName();
-                return true;
+            }
+            if (button == 0) {
+                List<HatCollection.Counted> variants = ClientCollectionData.get().variantsForName(name);
+                if (variants.isEmpty()) {
+                    return true; // missing hat, nothing to withdraw
+                } else if (variants.size() == 1) {
+                    Platform.SEND_TO_SERVER.accept(new WithdrawHatPayload(variants.get(0).hat()));
+                    return true;
+                } else {
+                    this.openMenuName = name;
+                    return true;
+                }
             }
         }
         return super.mouseClicked(mouseX, mouseY, button);

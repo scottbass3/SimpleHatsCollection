@@ -12,11 +12,14 @@
     "screen.simplehatscollection.sort.count": "Quantité",
     "screen.simplehatscollection.missing_shown": "Manquants : affichés",
     "screen.simplehatscollection.missing_hidden": "Manquants : masqués",
+    "screen.simplehatscollection.search": "Rechercher...",
 
     "tooltip.simplehatscollection.missing": "Pas encore collecté",
     "tooltip.simplehatscollection.stored": "Dans la collection : x%1$s",
-    "tooltip.simplehatscollection.click_withdraw": "Cliquer pour récupérer",
-    "tooltip.simplehatscollection.click_variants": "Cliquer pour choisir une variante à récupérer",
+    "tooltip.simplehatscollection.click_withdraw": "Clic gauche pour récupérer",
+    "tooltip.simplehatscollection.click_variants": "Clic gauche pour choisir une variante à récupérer",
+    "tooltip.simplehatscollection.favorite": "Clic droit pour mettre en favori",
+    "tooltip.simplehatscollection.unfavorite": "Clic droit pour retirer des favoris",
 
     "message.simplehatscollection.deposited": "%1$s rangé dans votre collection"
 }
