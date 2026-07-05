@@ -9,10 +9,11 @@ public final class CollectionKeybinds {
 
     public static final String CATEGORY = "key.categories.simplehatscollection";
 
+    // K by default: H is taken by SimpleHats/Accessories to open the accessories screen.
     public static final KeyMapping OPEN = new KeyMapping(
             "key.simplehatscollection.open",
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_H,
+            GLFW.GLFW_KEY_K,
             CATEGORY);
 
     private CollectionKeybinds() {}
