@@ -181,13 +181,19 @@ public class CollectionScreen extends Screen {
 
                 int x = gridLeft + c * CELL;
                 int y = gridTop + vr * CELL;
-                graphics.fill(x, y, x + CELL, y + CELL, owned ? 0xFF3A3A44 : 0xFF232329);
+                if (owned) {
+                    // Bright slate cell + light outline so collected hats clearly stand out.
+                    graphics.fill(x, y, x + CELL, y + CELL, 0xFF6A7180);
+                    graphics.renderOutline(x, y, CELL, CELL, 0xFFB7C0D8);
+                } else {
+                    graphics.fill(x, y, x + CELL, y + CELL, 0xFF1E1E22);
+                }
 
                 ItemStack icon = firstStoredOrBase(hat, collection);
                 graphics.renderItem(icon, x + 1, y + 1);
                 if (!owned) {
-                    // Grey out missing hats so they read as silhouettes.
-                    graphics.fill(x + 1, y + 1, x + 17, y + 17, 0xC8121212);
+                    // Darken missing hats so they read as silhouettes.
+                    graphics.fill(x + 1, y + 1, x + 17, y + 17, 0xC0000000);
                 } else {
                     graphics.renderItemDecorations(this.font, icon, x + 1, y + 1, String.valueOf(total));
                 }
