@@ -68,6 +68,21 @@ Accessories and oωo lib come from the [Wispforest maven](https://maven.wispfore
 
 Both runs include SimpleHats + Accessories + oωo so the hats exist in-game.
 
+## Releasing
+
+Minecraft versions are managed **by branch** (e.g. `MultiLoader-1.21.1` targets MC 1.21.1, read from
+that branch's `gradle.properties`). To publish a release, push a tag `vX.Y.Z` on the branch for the
+Minecraft version you are releasing:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+The [`Release`](.github/workflows/release.yml) GitHub Actions workflow then builds both loaders and
+creates a GitHub release with the jars, named `simplehatscollection-<loader>-<mcversion>-<modversion>.jar`.
+A tag containing a hyphen (e.g. `v1.0.0-beta.1`) is published as a pre-release.
+
 ## License
 
 Code is licensed under the **MIT License** (see `LICENSE`). This project does not bundle any SimpleHats
