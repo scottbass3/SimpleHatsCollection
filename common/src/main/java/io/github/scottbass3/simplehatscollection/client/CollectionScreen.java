@@ -13,6 +13,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -142,7 +143,7 @@ public class CollectionScreen extends Screen {
         switch (sortMode) {
             case NAME -> displayed.sort(Comparator.comparing(h -> h.getHatEntry().getHatName()));
             case RARITY -> displayed.sort(Comparator
-                    .comparingInt((HatItem h) -> h.getHatEntry().getHatRarity().ordinal())
+                    .comparingInt((HatItem h) -> -h.getHatEntry().getHatRarity().ordinal())
                     .thenComparing(h -> h.getHatEntry().getHatName()));
             case COUNT -> displayed.sort(Comparator
                     .comparingInt((HatItem h) -> -collection.totalForName(h.getHatEntry().getHatName()))
@@ -161,6 +162,15 @@ public class CollectionScreen extends Screen {
     private static boolean matches(HatItem hat, String name, String query) {
         if (name.toLowerCase(Locale.ROOT).contains(query)) return true;
         return new ItemStack(hat).getHoverName().getString().toLowerCase(Locale.ROOT).contains(query);
+    }
+
+    private static ChatFormatting rarityColor(Rarity rarity) {
+        return switch (rarity) {
+            case UNCOMMON -> ChatFormatting.YELLOW;
+            case RARE -> ChatFormatting.AQUA;
+            case EPIC -> ChatFormatting.LIGHT_PURPLE;
+            default -> ChatFormatting.WHITE;
+        };
     }
 
     @Override
@@ -248,7 +258,9 @@ public class CollectionScreen extends Screen {
 
     private List<Component> buildTooltip(HatItem hat, HatCollection collection) {
         List<Component> lines = new ArrayList<>();
-        lines.add(new ItemStack(hat).getHoverName());
+        // Colour the name by rarity, matching how the hat reads in the inventory.
+        lines.add(new ItemStack(hat).getHoverName().copy()
+                .withStyle(rarityColor(hat.getHatEntry().getHatRarity())));
         String name = hat.getHatEntry().getHatName();
         int total = collection.totalForName(name);
         if (total <= 0) {
