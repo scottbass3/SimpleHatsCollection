@@ -141,6 +141,13 @@ public class CollectionScreen extends Screen {
     }
 
     @Override
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        // Plain dim instead of the vanilla world blur: the blur post-effect bleeds over
+        // everything drawn in render() (title, counter, grid), leaving only widgets crisp.
+        graphics.fill(0, 0, this.width, this.height, 0xC0000000);
+    }
+
+    @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(graphics, mouseX, mouseY, partialTick);
 
