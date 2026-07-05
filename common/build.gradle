@@ -1,0 +1,39 @@
+plugins {
+    id 'multiloader-common'
+    id 'net.neoforged.moddev'
+}
+
+neoForge {
+    neoFormVersion = neo_form_version
+    def at = file('src/main/resources/META-INF/accesstransformer.cfg')
+    if (at.exists()) {
+        accessTransformers.from(at.absolutePath)
+    }
+    parchment {
+        minecraftVersion = parchment_minecraft
+        mappingsVersion = parchment_version
+    }
+}
+
+dependencies {
+    // Accessories is the API SimpleHats' HatItem extends; needed to compile against it.
+    compileOnly("io.wispforest:accessories-common:${accessories_version}-mojmap")
+    // SimpleHats itself. The NeoForge jar is Mojmap-named, matching the NeoForm/common environment.
+    compileOnly("curse.maven:simplehats-${simplehats_curse_project}:${simplehats_curse_neoforge}")
+}
+
+configurations {
+    commonJava {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+    commonResources {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+}
+
+artifacts {
+    commonJava sourceSets.main.java.sourceDirectories.singleFile
+    commonResources sourceSets.main.resources.sourceDirectories.singleFile
+}

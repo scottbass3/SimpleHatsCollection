@@ -1,0 +1,29 @@
+# Gradle
+.gradle/
+build/
+*/build/
+buildSrc/build/
+
+# Loader run directories
+run/
+runs/
+*/run/
+*/runs/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+*.launch
+
+# OS
+.DS_Store
+Thumbs.db
+
+# NeoForge generated
+*/src/generated/

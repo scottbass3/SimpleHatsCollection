@@ -1,0 +1,30 @@
+{
+    "schemaVersion": 1,
+    "id": "${mod_id}",
+    "version": "${version}",
+    "name": "${mod_name}",
+    "description": "${description}",
+    "authors": [
+        "${mod_author}"
+    ],
+    "contact": {},
+    "license": "${license}",
+    "environment": "*",
+    "accessWidener": "simplehatscollection.accesswidener",
+    "entrypoints": {
+        "main": [
+            "io.github.scottbass3.simplehatscollection.fabric.SimpleHatsCollectionFabric"
+        ],
+        "client": [
+            "io.github.scottbass3.simplehatscollection.fabric.SimpleHatsCollectionFabricClient"
+        ]
+    },
+    "depends": {
+        "fabricloader": ">=${fabric_loader_version}",
+        "fabric-api": "*",
+        "minecraft": "~1.21.1",
+        "java": ">=${java_version}",
+        "simplehats": "*",
+        "accessories": "*"
+    }
+}

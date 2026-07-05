@@ -1,0 +1,15 @@
+{
+    "key.categories.simplehatscollection": "Simple Hats Collection",
+    "key.simplehatscollection.open": "Open Hat Collection",
+
+    "screen.simplehatscollection.title": "Hat Collection",
+    "screen.simplehatscollection.progress": "%1$s / %2$s hats unlocked",
+    "screen.simplehatscollection.variant": "Variant %1$s  (x%2$s)",
+
+    "tooltip.simplehatscollection.missing": "Not collected yet",
+    "tooltip.simplehatscollection.stored": "In collection: x%1$s",
+    "tooltip.simplehatscollection.click_withdraw": "Click to withdraw",
+    "tooltip.simplehatscollection.click_variants": "Click to choose a variant to withdraw",
+
+    "message.simplehatscollection.deposited": "Stored %1$s in your collection"
+}

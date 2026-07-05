@@ -1,0 +1,15 @@
+{
+    "key.categories.simplehatscollection": "Collection de chapeaux",
+    "key.simplehatscollection.open": "Ouvrir la collection de chapeaux",
+
+    "screen.simplehatscollection.title": "Collection de chapeaux",
+    "screen.simplehatscollection.progress": "%1$s / %2$s chapeaux débloqués",
+    "screen.simplehatscollection.variant": "Variante %1$s  (x%2$s)",
+
+    "tooltip.simplehatscollection.missing": "Pas encore collecté",
+    "tooltip.simplehatscollection.stored": "Dans la collection : x%1$s",
+    "tooltip.simplehatscollection.click_withdraw": "Cliquer pour récupérer",
+    "tooltip.simplehatscollection.click_variants": "Cliquer pour choisir une variante à récupérer",
+
+    "message.simplehatscollection.deposited": "%1$s rangé dans votre collection"
+}
